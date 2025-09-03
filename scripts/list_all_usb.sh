@@ -11,6 +11,7 @@ for d in /sys/bus/usb/devices/*; do
     driver="none"
     [[ -L "$d/driver" ]] && driver=$(basename $(readlink "$d/driver"))
     name=$(lsusb -d ${vendor}:${product} 2>/dev/null | cut -d':' -f2 | xargs)
+    [[ -z "$name" ]] && name="Unknown Device"
 
     wake="N/A"
     [[ -f "$d/power/wakeup" ]] && wake=$(cat "$d/power/wakeup")
