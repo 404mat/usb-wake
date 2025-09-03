@@ -10,7 +10,7 @@ for d in /sys/bus/usb/devices/*; do
     product=$(cat "$d/idProduct")
     driver="none"
     [[ -L "$d/driver" ]] && driver=$(basename $(readlink "$d/driver"))
-    name=$(lsusb -d ${vendor}:${product} 2>/dev/null | cut -d':' -f2 | xargs)
+    name=$(lsusb -d ${vendor}:${product} 2>/dev/null | sed -E 's/^[^ ]+ +[^ ]+ +[^ ]+ +[^ ]+ +[^ ]+ +//' )
     [[ -z "$name" ]] && name="Unknown Device"
 
     wake="N/A"
