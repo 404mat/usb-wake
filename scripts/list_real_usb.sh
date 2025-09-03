@@ -1,6 +1,8 @@
 #!/bin/bash
 # Lists only real peripherals (skips root hubs and USB hubs) with power/wakeup state
 
+found=0
+
 for d in /sys/bus/usb/devices/*; do
   if [[ -f "$d/idVendor" ]]; then
     vendor=$(cat "$d/idVendor")
@@ -8,6 +10,7 @@ for d in /sys/bus/usb/devices/*; do
     bDeviceClass=$(cat "$d/bDeviceClass")
     [[ "$bDeviceClass" == "09" ]] && continue # skip hubs
 
+    found=1
     product=$(cat "$d/idProduct")
     driver="none"
     [[ -L "$d/driver" ]] && driver=$(basename $(readlink "$d/driver"))
@@ -19,3 +22,7 @@ for d in /sys/bus/usb/devices/*; do
     echo "[Vendor $vendor Product $product] $name (driver: $driver, wakeup: $wake)"
   fi
 done
+
+if [[ $found -eq 0 ]]; then
+  echo "No real USB peripherals found."
+fi
