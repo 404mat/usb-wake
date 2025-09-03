@@ -20,7 +20,9 @@ for d in /sys/bus/usb/devices/*; do
     wake="N/A"
     [[ -f "$d/power/wakeup" ]] && wake=$(cat "$d/power/wakeup")
 
-    echo "[Vendor $vendor Product $product] $name (driver: $driver, wakeup: $wake)"
+    path=$(basename "$d")
+
+    echo "[Path $path] [Vendor $vendor Product $product] $name (driver: $driver, wakeup: $wake)"
   fi
 done
 
