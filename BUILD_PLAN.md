@@ -1,9 +1,9 @@
 # Plan: USB/Bluetooth Wakeup Manager (Ratatui)
 
-- [ ] **1. Init project**
+- [x] **1. Init project**
 
-  - [ ] `cargo new usb-wakeup --bin`
-  - [ ] Add deps: `ratatui`, `crossterm`, `anyhow`
+  - [x] `cargo new usb-wakeup --bin`
+  - [x] Add deps: `ratatui`, `crossterm`, `anyhow`
 
 - [ ] **2. Device discovery**
 
