@@ -1,4 +1,4 @@
-use std::io::{self, stdout, Stdout};
+use std::io::{stdout, Stdout};
 
 use anyhow::Result;
 use crossterm::{
@@ -50,6 +50,12 @@ fn run_app(terminal: &mut Terminal<Backend>) -> Result<()> {
                 if key.code == crossterm::event::KeyCode::Char('q') {
                     break;
                 }
+                // Handle Ctrl+C
+                if key.code == crossterm::event::KeyCode::Char('c')
+                    && key.modifiers.contains(crossterm::event::KeyModifiers::CONTROL)
+                {
+                    break;
+                }
             }
         }
     }
@@ -57,7 +63,7 @@ fn run_app(terminal: &mut Terminal<Backend>) -> Result<()> {
 }
 
 fn ui(f: &mut Frame) {
-    let size = f.size();
+    let size = f.area();
 
     let chunks = Layout::default()
         .direction(Direction::Vertical)
@@ -69,20 +75,19 @@ fn ui(f: &mut Frame) {
         .split(size);
 
     // Title
+    let title_text = "  USB/Bluetooth Wakeup Manager  ";
     let title_line = Line::from(Span::styled(
-        "USB/Bluetooth Wakeup Manager",
+        title_text,
         Style::default()
             .fg(Color::Black)
-            .bg(Color::Blue)
+            .bg(Color::White)
             .add_modifier(ratatui::style::Modifier::BOLD),
     ));
 
-    // Calculate center position for the title
-    let title_width = "USB/Bluetooth Wakeup Manager".len() as u16;
+    let title_width = title_text.len() as u16;
     let center_x = (chunks[0].width.saturating_sub(title_width)) / 2;
     let center_y = chunks[0].y + chunks[0].height / 2;
 
-    // Render the title line at the center
     f.render_widget(title_line, Rect::new(chunks[0].x + center_x, center_y, title_width, 1));
 
     // Main content area (placeholder for device list)
@@ -93,8 +98,8 @@ fn ui(f: &mut Frame) {
 
     // Help bar
     let help = Paragraph::new("Press 'q' to quit")
-        .style(Style::default().fg(Color::Yellow))
-        .alignment(Alignment::Center)
+        .style(Style::default().fg(Color::White))
+        .alignment(Alignment::Left)
         .block(Block::default().borders(Borders::ALL).title("Help"));
     f.render_widget(help, chunks[2]);
 }
